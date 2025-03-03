@@ -25,7 +25,7 @@ struct record {
     }
 };
 
-void part1() {
+void part1_2() {
     ifstream input("input/input04");
     vector<record> record_vec;
     for (string line; getline(input, line);) {
@@ -64,9 +64,28 @@ void part1() {
     }
 
     println("{}", sleep_most->first * (max_element(sleep_minutes.begin(), sleep_minutes.end()) - sleep_minutes.begin()));
+
+    map<int, array<int, 60>> guard_minutes_sleep_times;
+    for (auto [id, vec] : guard_sleep_periods) {
+        array<int, 60> arr;
+        arr.fill(0);
+        for (auto [s, e] : vec) {
+            for (int i = s; i < e; ++i) {
+                ++arr[i];
+            }
+        }
+        guard_minutes_sleep_times.insert({id, arr});
+    }
+
+    auto minutes_most = max_element(guard_minutes_sleep_times.begin(), guard_minutes_sleep_times.end(), [](auto& g1, auto& g2) {
+        return *max_element(g1.second.begin(), g1.second.end()) < *max_element(g2.second.begin(), g2.second.end());
+    });
+
+    println("{}",
+            minutes_most->first * (max_element(minutes_most->second.begin(), minutes_most->second.end()) - minutes_most->second.begin()));
 }
 
 int main() {
-    part1();
+    part1_2();
     return 0;
 }
