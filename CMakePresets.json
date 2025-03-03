@@ -1,0 +1,36 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "x64_debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CUDA_STANDARD": "20",
+        "CMAKE_CUDA_ARCHITECTURES": "61",
+        "CMAKE_CUDA_HOST_COMPILER": "clang++",
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++"
+      }
+    },
+    {
+      "name": "x64_rel",
+      "inherits": "x64_debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64_debug",
+      "configurePreset": "x64_debug"
+    },
+    {
+      "name": "x64_rel",
+      "configurePreset": "x64_rel"
+    }
+  ]
+}
