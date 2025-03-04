@@ -3,11 +3,7 @@
 
 using namespace std;
 
-void part1() {
-    ifstream input("input/input05");
-    string line;
-    getline(input, line);
-
+string reaction(string line) {
     while (true) {
         string tmp;
         size_t i;
@@ -29,11 +25,38 @@ void part1() {
 
         line = std::move(tmp);
     }
+    return line;
+}
 
-    println("{}", line.size());
+void part1() {
+    ifstream input("input/input05");
+    string line;
+    getline(input, line);
+    println("{}", reaction(line).size());
+}
+
+void part2() {
+    ifstream input("input/input05");
+    string line;
+    getline(input, line);
+    array<size_t, 26> len_arr;
+
+    for (int i = 0; i < 26; ++i) {
+        string line_removed;
+        for (auto& c : line) {
+            if (c != 'a' + i && c != 'A' + i) {
+                line_removed.push_back(c);
+            }
+        }
+
+        len_arr[i] = reaction(line_removed).size();
+    }
+
+    println("{}", *min_element(len_arr.begin(), len_arr.end()));
 }
 
 int main() {
     part1();
+    part2();
     return 0;
 }
