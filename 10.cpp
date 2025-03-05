@@ -48,8 +48,12 @@ void print_pos(const vector<pair<int, int>>& pos) {
     string row(x_max - x_min + 1, ' ');
     vector<string> image(y_max - y_min + 1, row);
 
+    /*
+     * X represents how far left (negative) or right (positive) the point appears,
+     * while Y represents how far up (negative) or down (positive) the point appears.
+     */
     for (const auto& [x, y] : pos) {
-        image[y_max - y][x - x_min] = '#';
+        image[y - y_min][x - x_min] = '#';
     }
 
     for (const auto& str : image) {
@@ -57,7 +61,7 @@ void print_pos(const vector<pair<int, int>>& pos) {
     }
 }
 
-void part1() {
+void part1_2() {
     ifstream input("input/input10");
     vector<pair<int, int>> pos_vec;
     vector<pair<int, int>> vel_vec;
@@ -67,16 +71,19 @@ void part1() {
         vel_vec.push_back(vel);
     }
 
+    int second = 0;
     while (true) {
         for (size_t i = 0; i < pos_vec.size(); ++i) {
             pos_vec[i].first += vel_vec[i].first;
             pos_vec[i].second += vel_vec[i].second;
         }
-
+        ++second;
         auto var = calculateVariance(pos_vec);
 
         if (var.first < 19 && var.second < 19) {
             print_pos(pos_vec);
+            println();
+            println("{}", second);
             break;
         }
         /*
@@ -96,6 +103,6 @@ void part1() {
 }
 
 int main() {
-    part1();
+    part1_2();
     return 0;
 }
