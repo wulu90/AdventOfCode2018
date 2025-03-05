@@ -4,12 +4,12 @@
 
 using namespace std;
 
-void part1() {
-    int player_num  = 476;
-    int last_marble = 71657;
+void game(int last_marble) {
+    int player_num = 476;
+    // int last_marble = 7165700;
 
     list marble_list{0};
-    vector<int> score_vec(player_num, 0);
+    vector<int64_t> score_vec(player_num, 0);
 
     int marble      = 1;
     int player_turn = 0;
@@ -52,6 +52,7 @@ void part1() {
 }
 
 int main() {
-    part1();
+    game(71657);
+    game(7165700);
     return 0;
 }
