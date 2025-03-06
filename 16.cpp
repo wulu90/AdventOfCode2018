@@ -1,12 +1,15 @@
 #include <algorithm>
 #include <fstream>
 #include <functional>
+#include <iterator>
+#include <map>
+#include <set>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-void part1() {
+void part1_2() {
     vector<array<int, 4>> regs_vec;
     vector<array<int, 4>> samp_vec;
     vector<array<int, 4>> test_vec;
@@ -70,9 +73,60 @@ void part1() {
     }
 
     println("{}", oplike3);
+
+    map<int, set<size_t>> samp_options;
+    for (size_t i = 0; i < samp_vec.size(); ++i) {
+        auto before = regs_vec[i * 2];
+        auto after  = regs_vec[i * 2 + 1];
+        auto samp   = samp_vec[i];
+
+        for (size_t j = 0; j < ins_vec.size(); ++j) {
+            auto tmp = before;
+            ins_vec[j](samp[1], samp[2], samp[3], tmp);
+            if (tmp == after) {
+                samp_options[samp[0]].insert(j);
+            }
+        }
+    }
+
+    while (!all_of(samp_options.begin(), samp_options.end(), [](auto& sa_opts) {
+        auto& [sa, opts] = sa_opts;
+        return opts.size() == 1;
+    })) {
+        set<size_t> inx;
+        for_each(samp_options.begin(), samp_options.end(), [&inx](auto& sa_opts) {
+            auto& [sa, opts] = sa_opts;
+            if (opts.size() == 1) {
+                inx.insert(*opts.begin());
+            }
+        });
+
+        for_each(samp_options.begin(), samp_options.end(), [&inx](auto& sa_opts) {
+            auto& [sa, opts] = sa_opts;
+            if (opts.size() > 1) {
+                set<size_t> tmp;
+                set_difference(opts.begin(), opts.end(), inx.begin(), inx.end(), inserter(tmp, tmp.begin()));
+                opts = tmp;
+            }
+        });
+    }
+
+    map<int, size_t> samp_ins;
+    for (auto& [op, opts] : samp_options) {
+        samp_ins.insert({op, *opts.begin()});
+    }
+    // println("{}", samp_ins);
+
+    array<int, 4> oregs{0, 0, 0, 0};
+
+    for (auto [a, b, c, d] : test_vec) {
+        ins_vec[samp_ins[a]](b, c, d, oregs);
+    }
+
+    println("{}", oregs[0]);
 }
 
 int main() {
-    part1();
+    part1_2();
     return 0;
 }
